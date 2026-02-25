@@ -405,11 +405,35 @@ models_dict = {
             )
         ],
     ),
+    SpectralSubspaceRandomization.__name__
+    + "2": (
+        SpectralSubspaceRandomization,
+        dict(),
+        dict(
+            n_similarities=optuna.distributions.IntDistribution(10, 30),
+            sampling_ratio=optuna.distributions.FloatDistribution(0.2, 0.8),
+            sc_n_clusters=optuna.distributions.IntDistribution(2, 5),
+        ),
+        [
+            dict(
+                n_similarities=20,
+                sampling_ratio=0.5,
+                sc_n_clusters=3,
+            )
+        ],
+    ),
     KMeans.__name__: (
         KMeans,
         dict(),
         dict(n_clusters=optuna.distributions.IntDistribution(2, 30)),
         [dict(n_clusters=8)],
+    ),
+    KMeans.__name__
+    + "2": (
+        KMeans,
+        dict(),
+        dict(n_clusters=optuna.distributions.IntDistribution(2, 5)),
+        [dict(n_clusters=3)],
     ),
     "KernelRBFKMeans": (
         PseudoKernelClustering,
@@ -430,6 +454,32 @@ models_dict = {
             dict(
                 base_model_kwargs=dict(
                     n_clusters=8,
+                ),
+                transform_kwargs=dict(
+                    gamma=1.0,
+                ),
+            )
+        ],
+    ),
+    "KernelRBFKMeans2": (
+        PseudoKernelClustering,
+        dict(
+            base_model=KMeans,
+            transform_method=RBFSampler,
+            transform_kwargs=dict(n_components=500),
+        ),
+        dict(
+            base_model_kwargs=dict(
+                n_clusters=optuna.distributions.IntDistribution(2, 5),
+            ),
+            transform_kwargs=dict(
+                gamma=optuna.distributions.FloatDistribution(0.1, 30),
+            ),
+        ),
+        [
+            dict(
+                base_model_kwargs=dict(
+                    n_clusters=3,
                 ),
                 transform_kwargs=dict(
                     gamma=1.0,
